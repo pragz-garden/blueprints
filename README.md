@@ -1,6 +1,6 @@
-Microscopic Surface Anomaly Detection
+*** Microscopic Surface Anomaly Detection ***
 
-** Project Overview
+** Project Overview **
 
 This project implements an AI-powered anomaly detection system that analyzes microscopic surface images for defects. It consists of:
 
@@ -14,12 +14,19 @@ Web App (app.py) - Deploys a Streamlit-based UI to classify images as "Normal" o
 
 Microscopic-Surface-Anomaly-Detection/
 │── preprocess_norm.py  # Preprocessing dataset
+
 │── train_occ.py        # Training the autoencoder model
+
 │── app.py              # Streamlit Web App for anomaly detection
+
 │── preprocessed_normal.pkl # Preprocessed dataset
+
 │── one_class_autoencoder.h5 # Trained model
+
 │── anomaly_threshold.npy # Precomputed anomaly threshold
+
 │── requirements.txt    # Dependencies
+
 │── README.md           # Documentation (this file)
 
 ** Dependencies **
