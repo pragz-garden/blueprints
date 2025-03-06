@@ -5,17 +5,17 @@ import tensorflow as tf
 import cv2
 from tensorflow.keras import layers, models
 
-# ✅ Step 1: Load & Preprocess Dataset (All Normal Images for Training)
+# Load & Preprocess Dataset (All Normal Images for Training)
 with open("preprocessed_normal.pkl", "rb") as f:
     data = pickle.load(f)
 
-# ✅ Ensure correct extraction from pickle
+#  Ensure correct extraction from pickle
 if isinstance(data, tuple):  
     X_data, _ = data  # Extract images only if labels exist
 else:
     X_data = data  
 
-# ✅ Convert X_data into a properly formatted NumPy array
+#  Convert X_data into a properly formatted NumPy array
 X_data_fixed = []  # Empty list to store fixed images
 
 for img in X_data:
@@ -25,12 +25,12 @@ for img in X_data:
     else:
         print("⚠ Warning: Skipping invalid image data")
 
-# ✅ Convert list into a NumPy array
+#  Convert list into a NumPy array
 X_train = np.array(X_data_fixed, dtype=np.float32) / 255.0  # Normalize
 
-print(f"✅ Training on Normal Images Only: {X_train.shape}")
+print(f" Training on Normal Images Only: {X_train.shape}")
 
-# ✅ Step 2: Define the Autoencoder Model
+# Define the Autoencoder Model
 autoencoder = models.Sequential([
     layers.Input(shape=(128, 128, 3)),  # RGB Input
     layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
@@ -54,29 +54,29 @@ autoencoder = models.Sequential([
     layers.Conv2D(3, (3, 3), activation='sigmoid', padding='same')  # Output RGB Image
 ])
 
-# ✅ Step 3: Compile Model
+# Compile Model
 autoencoder.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001), loss='mse', metrics=['accuracy'])
 
-# ✅ Step 4: Train Model
+#Train Model
 history = autoencoder.fit(X_train, X_train, epochs=50, batch_size=32, validation_split=0.1)
 
-# ✅ Step 5: Save the Trained Autoencoder
+#  Save the Trained Autoencoder
 autoencoder.save("one_class_autoencoder.h5")
-print("🎉 Model training complete and saved as 'one_class_autoencoder.h5'")
+print(" Model training complete and saved as 'one_class_autoencoder.h5'")
 
-# ======================================================
-# ✅ Step 6: Anomaly Detection - Load Test Data
-# ======================================================
+
+# Anomaly Detection - Load Test Data
+
 with open("preprocessed_normal.pkl", "rb") as f:
     data = pickle.load(f)
 
-# ✅ Ensure correct extraction and formatting
+#  Ensure correct extraction and formatting
 if isinstance(data, tuple):
     X_test = data[0]  # Extract images only
 else:
     X_test = data
 
-# ✅ Convert X_test into a properly formatted NumPy array
+#  Convert X_test into a properly formatted NumPy array
 X_test_fixed = []
 for img in X_test:
     if isinstance(img, np.ndarray):
@@ -85,29 +85,29 @@ for img in X_test:
     else:
         print("⚠ Warning: Skipping invalid image data")
 
-# ✅ Convert list into a NumPy array & Normalize
+#  Convert list into a NumPy array & Normalize
 X_test = np.array(X_test_fixed, dtype=np.float32) / 255.0
 
-# ======================================================
-# ✅ Step 7: Compute Reconstruction Errors for Test Images
-# ======================================================
+
+#   Compute Reconstruction Errors for Test Images
+
 reconstructed = autoencoder.predict(X_test)
 mse_errors = np.mean(np.square(X_test - reconstructed), axis=(1, 2, 3))
 
-# ✅ Step 8: Set Anomaly Threshold (95th Percentile of Normal Data)
+# Set Anomaly Threshold (95th Percentile of Normal Data)
 threshold = np.percentile(mse_errors, 60)
 
-# ✅ Step 9: Detect Anomalies (If Error > Threshold, It's Defective)
+# Detect Anomalies (If Error > Threshold, It's Defective)
 predictions = mse_errors > threshold  # True = Defective, False = Normal
 
-# ======================================================
-# ✅ Step 10: Print & Save Results
-# ======================================================
-print("🔍 Reconstruction Errors:", mse_errors)
-print("🚨 Anomaly Detection Threshold:", threshold)
-print(f"✅ Predicted Defective Images: {np.sum(predictions)}")
-print(f"✅ Predicted Normal Images: {np.sum(~predictions)}")
 
-# ✅ Save threshold for Web App Integration
+# Print & Save Results
+
+print(" Reconstruction Errors:", mse_errors)
+print(" Anomaly Detection Threshold:", threshold)
+print(f" Predicted Defective Images: {np.sum(predictions)}")
+print(f" Predicted Normal Images: {np.sum(~predictions)}")
+
+#  Save threshold for Web App Integration
 np.save("anomaly_threshold.npy", threshold)
-print("✅ Anomaly detection threshold saved as 'anomaly_threshold.npy'")
+print(" Anomaly detection threshold saved as 'anomaly_threshold.npy'")
