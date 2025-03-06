@@ -33,25 +33,25 @@ Microscopic-Surface-Anomaly-Detection/
 
 Ensure you have the following Python packages installed:
 
-numpy
+* numpy
 
-opencv-python
+* opencv-python
 
-tensorflow
+* tensorflow
 
-streamlit
+* streamlit
 
-pandas
+* pandas
 
-scikit-learn
+* scikit-learn
 
-pickle-mixin
+* pickle-mixin
 
 Install them using:
 
 pip install -r requirements.txt
 
-**Setup and Execution**
+** Setup and Execution **
 
 🔹 1. Preprocess the Dataset
 
